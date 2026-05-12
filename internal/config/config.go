@@ -21,7 +21,8 @@ const (
 	// 1) CHAT_MODEL_ID (full override)
 	// 2) AWS_ACCOUNT_ID
 	// 3) STS GetCallerIdentity
-	ChatModelARNTemplate    = "arn:aws:bedrock:eu-central-1:%s:inference-profile/eu.amazon.nova-2-lite-v1:0"
+	ChatModelARNTemplate = "arn:aws:bedrock:eu-central-1:%s:inference-profile/eu.amazon.nova-2-lite-v1:0"
+	// "arn:aws:bedrock:eu-central-1:%s:inference-profile/eu.anthropic.claude-sonnet-4-5-20250929-v1:0"
 	DefaultEmbeddingModelID = "amazon.titan-embed-text-v2:0"
 
 	datasourcesRelPath = "datasources/datasources.json"

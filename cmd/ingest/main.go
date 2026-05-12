@@ -162,6 +162,19 @@ func discoverFiles(directory string, extensions []string, filter *regexp.Regexp)
 var codeFenceStartRe = regexp.MustCompile(`(?i)^\x60\x60\x60(?:json)?\s*`)
 var codeFenceEndRe = regexp.MustCompile(`\s*\x60\x60\x60\s*$`)
 
+type converseAPI interface {
+	Converse(
+		ctx context.Context,
+		params *bedrockruntime.ConverseInput,
+		optFns ...func(*bedrockruntime.Options),
+	) (*bedrockruntime.ConverseOutput, error)
+}
+
+type ingestBedrockAPI interface {
+	converseAPI
+	embeddings.InvokeModelAPI
+}
+
 func extractConverseMessage(output *bedrockruntime.ConverseOutput) (types.Message, error) {
 	if output == nil || output.Output == nil {
 		return types.Message{}, fmt.Errorf("converse response did not include a message")
@@ -175,7 +188,7 @@ func extractConverseMessage(output *bedrockruntime.ConverseOutput) (types.Messag
 
 func indexFile(
 	ctx context.Context,
-	client *bedrockruntime.Client,
+	client converseAPI,
 	modelID string,
 	filePath string,
 	relativeRoot string,
@@ -202,6 +215,7 @@ func indexFile(
 				},
 			},
 		},
+		ServiceTier: &types.ServiceTier{Type: types.ServiceTierTypeFlex},
 	})
 	if err != nil {
 		return nil, fmt.Errorf("Bedrock Converse error: %w", err)
@@ -262,7 +276,7 @@ type taskResult struct {
 
 func runWithConcurrency(
 	ctx context.Context,
-	client *bedrockruntime.Client,
+	client ingestBedrockAPI,
 	chatModelID string,
 	embeddingModelID string,
 	files []string,

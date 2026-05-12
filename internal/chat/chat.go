@@ -205,6 +205,7 @@ func AnswerQuestion(ctx context.Context, question string, opts AnswerOptions) (s
 			InferenceConfig: &types.InferenceConfiguration{
 				Temperature: aws.Float32(0),
 			},
+			ServiceTier: &types.ServiceTier{Type: types.ServiceTierTypeDefault},
 		})
 		if err != nil {
 			return "", fmt.Errorf("Bedrock Converse error: %w", err)
@@ -322,6 +323,7 @@ func StreamAnswer(ctx context.Context, question string, opts AnswerOptions) (<-c
 				InferenceConfig: &types.InferenceConfiguration{
 					Temperature: aws.Float32(0),
 				},
+				ServiceTier: &types.ServiceTier{Type: types.ServiceTierTypeDefault},
 			})
 			if err != nil {
 				ch <- StreamEvent{Type: "delta", Text: fmt.Sprintf("Error: %v", err)}

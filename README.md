@@ -77,6 +77,14 @@ Embedding model configuration:
 - `EMBEDDING_MODEL_ID` (optional): Bedrock model ID used by `ingest` and semantic fallback in `lookup_keywords`.
   Defaults to `amazon.titan-embed-text-v2:0`.
 
+Bedrock service tiers:
+
+- Interactive chat requests (`server`, `chat`, and semantic fallback embeddings)
+  use the Standard tier.
+- `ingest` uses the Flex tier for file-summary/index generation. Ingest
+  embeddings stay on Standard because the default Titan embedding model does not
+  support Flex.
+
 ### Datasources
 
 Quarry needs at least one datasource to be useful. Datasources are configured
